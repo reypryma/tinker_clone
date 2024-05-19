@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:tinker_clone/controllers/auth_controller.dart';
 import 'package:tinker_clone/screens/auth/login_screen.dart';
-import 'package:tinker_clone/screens/auth/register_screen.dart';
+import 'package:get/get.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  Get.put(AuthController());
+
   runApp(const MyApp());
 }
 
@@ -11,10 +16,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Tinker Clone',
       theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: Colors.black),
-      home: const RegisterScreen(),
+      home: const LoginScreen(),
     );
   }
 }

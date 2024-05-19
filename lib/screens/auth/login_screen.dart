@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:tinker_clone/global/app_constant.dart';
+import 'package:tinker_clone/screens/auth/register_screen.dart';
 import 'package:tinker_clone/widgets/custom_text_field_widget.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -120,7 +123,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Get.to(RegisterScreen());
+                    },
                     child: const Text(
                       "Create Here",
                       style: TextStyle(

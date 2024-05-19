@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tinker_clone/controllers/auth_controller.dart';
 import 'package:tinker_clone/widgets/custom_text_field_widget.dart';
+
+import '../../widgets/upload_avatar_display_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -61,6 +65,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       TextEditingController();
   bool showProgressBar = false;
 
+  var authenticationController = AuthController.authController;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,12 +103,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 height: 16,
               ),
 
+              UploadAvatarDisplayWidget(imageFile: authenticationController.imageFile,),
+
+              const SizedBox(
+                height: 16,
+              ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
                     onPressed: () async {
-                      setState(() {});
+                      await authenticationController.pickImageFileFromGallery();
+                      setState(() {
+                        authenticationController.imageFile;
+                        print("Image path " + authenticationController.imageFile!.path);
+                      });
                     },
                     icon: const Icon(
                       Icons.image_outlined,
@@ -115,7 +131,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   IconButton(
                     onPressed: () async {
-                      setState(() {});
+                      await authenticationController.captureImageFromPhoneCamera();
+                      setState(() {
+                        authenticationController.imageFile;
+                      });
                     },
                     icon: const Icon(
                       Icons.camera_alt_outlined,
@@ -675,7 +694,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Get.back();
+                    },
                     child: const Text(
                       "Login Here",
                       style: TextStyle(
