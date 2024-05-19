@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tinker_clone/screens/auth/login_screen.dart';
+import 'package:tinker_clone/screens/auth/register_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,11 +13,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Tinker Clone',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const LoginScreen(),
+      theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: Colors.black),
+      home: const RegisterScreen(),
     );
   }
 }
