@@ -39,6 +39,7 @@ class CustomTextFieldWidget extends StatelessWidget {
             color: Colors.grey,
           ),
         ),
+
       ),
       obscureText: isObscure!,
     );
