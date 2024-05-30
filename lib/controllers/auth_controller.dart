@@ -8,10 +8,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tinker_clone/global/app_constant.dart';
 
 import '../models/Person.dart' as person_model;
+import '../screens/auth/login_screen.dart';
 import '../screens/home/home_screen.dart';
 
 class AuthController extends GetxController {
   static AuthController authController = Get.find();
+  late Rx<User?> firebaseCurrentUser;
 
   late Rx<File?> pickedFile;
 
@@ -26,23 +28,23 @@ class AuthController extends GetxController {
           "you have successfully picked your profile image from galley.");
     }
 
-    pickedFile =  Rx<File?>(File(imageFile!.path));
+    pickedFile = Rx<File?>(File(imageFile!.path));
   }
 
-  captureImageFromPhoneCamera() async
-  {
+  captureImageFromPhoneCamera() async {
     imageFile = await ImagePicker().pickImage(source: ImageSource.camera);
 
-    if(imageFile != null)
-    {
-      Get.snackbar("Profile Image", "you have successfully captured your profile image using camera.");
+    if (imageFile != null) {
+      Get.snackbar("Profile Image",
+          "you have successfully captured your profile image using camera.");
     }
 
     pickedFile = Rx<File?>(File(imageFile!.path));
   }
 
-  Future<String> uploadImageToStorage(File imageProfile) async{
-    Reference referenceStorage = FirebaseStorage.instance.ref()
+  Future<String> uploadImageToStorage(File imageProfile) async {
+    Reference referenceStorage = FirebaseStorage.instance
+        .ref()
         .child(AppConstant.firebaseProfileImages)
         .child(FirebaseAuth.instance.currentUser!.uid);
 
@@ -55,40 +57,53 @@ class AuthController extends GetxController {
   }
 
   createNewUserAccount(
-      //personal info
-      File imageProfile, String email, String password,
-      String name, String age,
-      String phoneNo, String city,
-      String country, String profileHeading,
-      String lookingForInaPartner,
+    //personal info
+    File imageProfile,
+    String email,
+    String password,
+    String name,
+    String age,
+    String phoneNo,
+    String city,
+    String country,
+    String profileHeading,
+    String lookingForInaPartner,
 
-      //Appearance
-      String height, String weight, String bodyType,
+    //Appearance
+    String height,
+    String weight,
+    String bodyType,
 
-      //Life style
-      String drink, String smoke, String martialStatus,
-      String haveChildren, String noOfChildren, String profession,
-      String employmentStatus, String income, String livingSituation,
-      String willingToRelocate, String relationshipYouAreLookingFor,
+    //Life style
+    String drink,
+    String smoke,
+    String martialStatus,
+    String haveChildren,
+    String noOfChildren,
+    String profession,
+    String employmentStatus,
+    String income,
+    String livingSituation,
+    String willingToRelocate,
+    String relationshipYouAreLookingFor,
 
-      //Background - Cultural Values
-      String nationality, String education, String languageSpoken,
-      String religion, String ethnicity,) async
-  {
-    try
-    {
+    //Background - Cultural Values
+    String nationality,
+    String education,
+    String languageSpoken,
+    String religion,
+    String ethnicity,
+  ) async {
+    try {
       //1. authenticate user and create User With Email and Password
-      UserCredential credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email,
-          password: password
-      );
+      UserCredential credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
 
       //2. upload image to storage
       String urlOfDownloadedImage = await uploadImageToStorage(imageProfile);
 
       //3. save user info to firestore database
       person_model.Person personInstance = person_model.Person(
-
         //personal info
         imageProfile: urlOfDownloadedImage,
         email: email,
@@ -126,21 +141,51 @@ class AuthController extends GetxController {
         languageSpoken: languageSpoken,
         religion: religion,
         ethnicity: ethnicity,
-
       );
 
-      await FirebaseFirestore.instance.collection(AppConstant.firebaseUserCollections)
+      await FirebaseFirestore.instance
+          .collection(AppConstant.firebaseUserCollections)
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .set(personInstance.toJson());
 
-      Get.snackbar("Account Created", "Congratulations, your account has been created.");
-      Get.to(HomeScreen());
-    }
-    catch(errorMsg)
-    {
-      Get.snackbar("Account Creation Unsuccessful", "Error occurred: $errorMsg");
+      Get.snackbar(
+          "Account Created", "Congratulations, your account has been created.");
+      Get.to(const HomeScreen());
+    } catch (errorMsg) {
+      Get.snackbar(
+          "Account Creation Unsuccessful", "Error occurred: $errorMsg");
     }
   }
 
+  loginUser(String emailUser, String passwordUser) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailUser,
+        password: passwordUser,
+      );
 
+      Get.snackbar("Logged-in Successful", "you're logged-in successfully.");
+
+      Get.to(HomeScreen());
+    } catch (errorMsg) {
+      Get.snackbar("Login Unsuccessful", "Error occurred: $errorMsg");
+    }
+  }
+
+  checkIfUserIsLoggedIn(User? currentUser) {
+    if (currentUser == null) {
+      Get.to(LoginScreen());
+    } else {
+      Get.to(HomeScreen());
+    }
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    firebaseCurrentUser = Rx<User?>(FirebaseAuth.instance.currentUser);
+    firebaseCurrentUser.bindStream(FirebaseAuth.instance.authStateChanges());
+
+    ever(firebaseCurrentUser, checkIfUserIsLoggedIn);
+  }
 }

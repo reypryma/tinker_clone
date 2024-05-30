@@ -5,6 +5,8 @@ import 'package:tinker_clone/global/app_constant.dart';
 import 'package:tinker_clone/screens/auth/register_screen.dart';
 import 'package:tinker_clone/widgets/custom_text_field_widget.dart';
 
+import '../../controllers/auth_controller.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -16,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController passwordTextEditingController = TextEditingController();
   bool showProgressBar = false;
+  var controllerAuth = AuthController.authController;
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +96,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       Radius.circular(12),
                     )),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    if(emailTextEditingController.text.trim().isNotEmpty
+                        && passwordTextEditingController.text.trim().isNotEmpty)
+                    {
+                      setState(() {
+                        showProgressBar = true;
+                      });
+
+                      await controllerAuth.loginUser(
+                          emailTextEditingController.text.trim(),
+                          passwordTextEditingController.text.trim()
+                      );
+
+                      setState(() {
+                        showProgressBar = false;
+                      });
+                    }
+                    else
+                    {
+                      Get.snackbar("Email/Password is Missing", "Please fill all fields.");
+                    }
+                  },
                   child: const Center(
                     child: Text(
                       "Login",
