@@ -6,10 +6,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tinker_clone/global/app_constant.dart';
+import 'package:tinker_clone/ui/screens/auth/login_screen.dart';
+import 'package:tinker_clone/ui/screens/home/home_screen.dart';
 
 import '../models/Person.dart' as person_model;
-import '../screens/auth/login_screen.dart';
-import '../screens/home/home_screen.dart';
 
 class AuthController extends GetxController {
   static AuthController authController = Get.find();
