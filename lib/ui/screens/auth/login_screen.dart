@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:tinker_clone/controllers/auth_controller.dart';
 import 'package:tinker_clone/global/app_constant.dart';
-import 'package:tinker_clone/screens/auth/register_screen.dart';
-import 'package:tinker_clone/widgets/custom_text_field_widget.dart';
+import 'package:tinker_clone/ui/screens/auth/register_screen.dart';
+import 'package:tinker_clone/ui/widgets/custom_text_field_widget.dart';
 
-import '../../controllers/auth_controller.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

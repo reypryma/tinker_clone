@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tinker_clone/controllers/auth_controller.dart';
-import 'package:tinker_clone/widgets/custom_text_field_widget.dart';
 
+import '../../widgets/custom_text_field_widget.dart';
 import '../../widgets/upload_avatar_display_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
