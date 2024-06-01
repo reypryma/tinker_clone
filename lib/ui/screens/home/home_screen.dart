@@ -23,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen>
     const LikeSentLikeReceivedFragment(),
     const ViewSentViewReceivedFragment(),
     const FavoriteSentFavoriteReceivedFragment(),
-    const LikeSentLikeReceivedFragment(),
     const UserInfoFragment(),
   ];
 
@@ -43,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen>
         unselectedItemColor: Colors.white12,
         currentIndex: screenIndex,
         items: const [
-
           //SwippingScreen
           BottomNavigationBarItem(
               icon: Icon(
