@@ -13,14 +13,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Java 17
+      - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
-          java-version: 17
+          java-version: 21
           distribution: 'zulu'
 
       - name: Setup Flutter SDK
         uses: flutter-actions/setup-flutter@v3
         with:
           channel: stable
-          version: latest
+#          version: latest
+      - name: Check java version
+        run: java --version
+      - name: Check flutter version
+        run: flutter --version
