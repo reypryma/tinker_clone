@@ -872,6 +872,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         setState(() {
           showProgressBar = false;
         });
+
+        authenticationController.imageFile = null;
       } else {
         Get.snackbar("A Field is Empty",
             "Please fill out all field in text fields.");
