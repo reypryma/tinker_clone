@@ -96,7 +96,7 @@ class AuthController extends GetxController {
   ) async {
     try {
       //1. authenticate user and create User With Email and Password
-      UserCredential credential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
       //2. upload image to storage
@@ -167,7 +167,7 @@ class AuthController extends GetxController {
 
       Get.snackbar("Logged-in Successful", "you're logged-in successfully.");
 
-      Get.to(HomeScreen());
+      Get.to(const HomeScreen());
     } catch (errorMsg) {
       Get.snackbar("Login Unsuccessful", "Error occurred: $errorMsg");
     }
@@ -175,9 +175,9 @@ class AuthController extends GetxController {
 
   checkIfUserIsLoggedIn(User? currentUser) {
     if (currentUser == null) {
-      Get.to(LoginScreen());
+      Get.to(const LoginScreen());
     } else {
-      Get.to(HomeScreen());
+      Get.to(const HomeScreen());
     }
   }
 
