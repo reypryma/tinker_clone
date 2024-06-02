@@ -1,3 +1,5 @@
+name: Start Main Workflow
+
 on:  #events (push and pull_request)
   push:
     branches: [ "master" ]
