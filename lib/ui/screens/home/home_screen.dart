@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'fragments/favorite_sent_fragment.dart';
@@ -23,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen>
     const LikeSentLikeReceivedFragment(),
     const ViewSentViewReceivedFragment(),
     const FavoriteSentFavoriteReceivedFragment(),
-    const UserInfoFragment(),
+    UserInfoFragment(userID: FirebaseAuth.instance.currentUser!.uid),
   ];
 
   @override
