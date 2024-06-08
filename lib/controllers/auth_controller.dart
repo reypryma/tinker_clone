@@ -175,9 +175,9 @@ class AuthController extends GetxController {
 
   checkIfUserIsLoggedIn(User? currentUser) {
     if (currentUser == null) {
-      Get.to(const LoginScreen());
+      Get.offAll(() => const LoginScreen());
     } else {
-      Get.to(const HomeScreen());
+      Get.offAll(() => const HomeScreen());
     }
   }
 
