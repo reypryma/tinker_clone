@@ -36,9 +36,7 @@ class _SwipingFragmentState extends State<SwipingFragment>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     readCurrentUserData();
   }
 
