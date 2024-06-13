@@ -12,6 +12,8 @@ class AppConstant {
   // Firebase Assets
   static const firebaseProfileImages = "Profile Images";
   static const firebaseUserCollections = "users";
+  static const firebaseUserFavoriteSentCollections = "favoriteSent";
+  static const firebaseUserFavoriteReceivedCollections = "favoriteReceived";
 
   // Firebase Url
 
