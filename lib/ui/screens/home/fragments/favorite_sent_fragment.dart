@@ -37,9 +37,9 @@ class _FavoriteSentFavoriteReceivedFragmentState
       getKeysDataFromUsersCollection(favoriteSentList);
     } else {
       var favoriteReceivedDocument = await FirebaseFirestore.instance
-          .collection("users")
+          .collection(AppConstant.firebaseUserCollections)
           .doc(currentUserID.toString())
-          .collection("favoriteReceived")
+          .collection(AppConstant.firebaseUserFavoriteReceivedCollections)
           .get();
 
       for (int i = 0; i < favoriteReceivedDocument.docs.length; i++) {
