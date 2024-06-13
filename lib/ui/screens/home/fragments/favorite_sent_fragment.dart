@@ -55,7 +55,7 @@ class _FavoriteSentFavoriteReceivedFragmentState
 
   getKeysDataFromUsersCollection(List<String> keysList) async {
     var allUsersDocument =
-        await FirebaseFirestore.instance.collection("users").get();
+        await FirebaseFirestore.instance.collection(AppConstant.firebaseUserCollections).get();
 
     for (int i = 0; i < allUsersDocument.docs.length; i++) {
       for (int k = 0; k < keysList.length; k++) {
