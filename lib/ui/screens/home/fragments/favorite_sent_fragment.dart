@@ -76,16 +76,169 @@ class _FavoriteSentFavoriteReceivedFragmentState
   }
 
   @override
+  void initState() {
+    super.initState();
+    getFavoriteListKeys();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          "Favorite Sent Favorite Received Screen",
-          style: TextStyle(
-            color: Colors.green,
-            fontSize: 20,
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+
+            TextButton(
+              onPressed: ()
+              {
+                favoriteSentList.clear();
+                favoriteSentList = [];
+                favoriteReceivedList.clear();
+                favoriteReceivedList = [];
+                favoritesList.clear();
+                favoritesList = [];
+
+                setState(() {
+                  isFavoriteSentClicked = true;
+                });
+
+                getFavoriteListKeys();
+              },
+              child: Text(
+                "My Favorites",
+                style: TextStyle(
+                  color: isFavoriteSentClicked ? Colors.white : Colors.grey,
+                  fontWeight: isFavoriteSentClicked ? FontWeight.bold : FontWeight.normal,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+
+            const Text(
+              "   |   ",
+              style: TextStyle(
+                color: Colors.grey,
+              ),
+            ),
+
+            TextButton(
+              onPressed: ()
+              {
+                favoriteSentList.clear();
+                favoriteSentList = [];
+                favoriteReceivedList.clear();
+                favoriteReceivedList = [];
+                favoritesList.clear();
+                favoritesList = [];
+
+                setState(() {
+                  isFavoriteSentClicked = false;
+                });
+
+                getFavoriteListKeys();
+              },
+              child: Text(
+                "I'm their Favorite",
+                style: TextStyle(
+                  color: isFavoriteSentClicked ? Colors.grey : Colors.white,
+                  fontWeight: isFavoriteSentClicked ? FontWeight.normal : FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+
+
+          ],
         ),
+        centerTitle: true,
+      ),
+      body: favoritesList.isEmpty
+          ? const Center(
+        child: Icon(Icons.person_off_sharp, color: Colors.white, size: 60,),
+      )
+          : GridView.count(
+        crossAxisCount: 2,
+        padding: const EdgeInsets.all(8),
+        children: List.generate(favoritesList.length, (index)
+        {
+          return GridTile(
+            child: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Card(
+                color: Colors.blue.shade200,
+                child: GestureDetector(
+                  onTap: ()
+                  {
+
+                  },
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(favoritesList[index]["imageProfile"],),
+                          fit: BoxFit.cover,
+                        )
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+
+                            const Spacer(),
+
+                            //name - age
+                            Text(
+                              "${favoritesList[index]["name"]} ◉ ${favoritesList[index]["age"]}",
+                              maxLines: 2,
+                              style: const TextStyle(
+                                overflow: TextOverflow.ellipsis,
+                                color: Colors.grey,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            const SizedBox(
+                              height: 4,
+                            ),
+
+                            //icon - city - country
+                            Row(
+                              children: [
+
+                                const Icon(
+                                  Icons.location_on_outlined,
+                                  color: Colors.grey,
+                                  size: 16,
+                                ),
+
+                                Expanded(
+                                  child: Text(
+                                    "${favoritesList[index]["city"]}, ${favoritesList[index]["country"]}",
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                      overflow: TextOverflow.ellipsis,
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
