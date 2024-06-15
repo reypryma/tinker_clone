@@ -14,6 +14,10 @@ class AppConstant {
   static const firebaseUserCollections = "users";
   static const firebaseUserFavoriteSentCollections = "favoriteSent";
   static const firebaseUserFavoriteReceivedCollections = "favoriteReceived";
+  static const firebaseUserLikeReceivedCollections = "likeReceived";
+  static const firebaseUserLikeSentCollections = "likeSent";
+
+
 
   // Firebase Url
 
