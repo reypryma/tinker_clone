@@ -77,6 +77,7 @@ class ProfileController extends GetxController {
 
     update();
   }
+
   likeSentAndLikeReceived(String toUserID, String senderName) async {
     var document = await FirebaseFirestore.instance
         .collection(AppConstant.firebaseUserCollections)
@@ -97,9 +98,8 @@ class ProfileController extends GetxController {
 
       ///remove profile person [toUserID] from the likeSent list of the currentUser
       await FirebaseFirestore.instance
-          .collection(AppConstant.firebaseUserCollections)
-          .doc(currentUserID).collection(AppConstant.firebaseUserLikeSentCollections)
-          .doc(toUserID)
+          .collection("users")
+          .doc(currentUserID).collection("likeSent").doc(toUserID)
           .delete();
 
     } else {
@@ -108,7 +108,7 @@ class ProfileController extends GetxController {
           .doc(toUserID)
           .collection(AppConstant.firebaseUserLikeReceivedCollections)
           .doc(currentUserID)
-          .delete();
+          .set({});
 
       //add profile person [toUserID] to the likeSent list of the currentUser
       await FirebaseFirestore.instance
@@ -116,7 +116,6 @@ class ProfileController extends GetxController {
           .doc(currentUserID).collection(AppConstant.firebaseUserLikeSentCollections)
           .doc(toUserID)
           .set({});
-
       /// TODO send notification
     }
     update();
