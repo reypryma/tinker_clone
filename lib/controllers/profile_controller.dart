@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:tinker_clone/global/app_constant.dart';
@@ -55,7 +56,7 @@ class ProfileController extends GetxController {
           .doc(toUserID)
           .delete();
     } else //mark as favorite //add favorite in database
-    {
+        {
       //add currentUserID to the favoriteReceived list of that profile person [toUserID]
       await FirebaseFirestore.instance
           .collection(AppConstant.firebaseUserCollections)
@@ -98,10 +99,10 @@ class ProfileController extends GetxController {
 
       ///remove profile person [toUserID] from the likeSent list of the currentUser
       await FirebaseFirestore.instance
-          .collection("users")
-          .doc(currentUserID).collection("likeSent").doc(toUserID)
+          .collection(AppConstant.firebaseUserCollections)
+          .doc(currentUserID).collection(
+          AppConstant.firebaseUserLikeSentCollections).doc(toUserID)
           .delete();
-
     } else {
       await FirebaseFirestore.instance
           .collection(AppConstant.firebaseUserCollections)
@@ -113,11 +114,48 @@ class ProfileController extends GetxController {
       //add profile person [toUserID] to the likeSent list of the currentUser
       await FirebaseFirestore.instance
           .collection(AppConstant.firebaseUserCollections)
-          .doc(currentUserID).collection(AppConstant.firebaseUserLikeSentCollections)
+          .doc(currentUserID).collection(
+          AppConstant.firebaseUserLikeSentCollections)
           .doc(toUserID)
           .set({});
+
       /// TODO send notification
     }
+    update();
+  }
+
+  viewSentAndViewReceived(String toUserID, String senderName) async
+  {
+    var document = await FirebaseFirestore.instance
+        .collection(AppConstant.firebaseUserCollections)
+        .doc(toUserID).collection(
+        AppConstant.firebaseUserViewReceivedCollections).doc(currentUserID)
+        .get();
+
+    if (document.exists) {
+      if (kDebugMode) {
+        print("already in view list");
+      }
+    }
+    else {
+      /// add new view in database
+      /// add currentUserID to the viewReceived list of that profile person [toUserID]
+      await FirebaseFirestore.instance
+          .collection(AppConstant.firebaseUserCollections)
+          .doc(toUserID).collection(
+          AppConstant.firebaseUserViewReceivedCollections).doc(currentUserID)
+          .set({});
+
+      /// add profile person [toUserID] to the viewSent list of the currentUser
+      await FirebaseFirestore.instance
+          .collection(AppConstant.firebaseUserCollections)
+          .doc(currentUserID).collection(
+          AppConstant.firebaseUserViewSentCollections).doc(toUserID)
+          .set({});
+
+      /// TODO send notification
+    }
+
     update();
   }
 }

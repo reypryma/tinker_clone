@@ -16,6 +16,8 @@ class AppConstant {
   static const firebaseUserFavoriteReceivedCollections = "favoriteReceived";
   static const firebaseUserLikeReceivedCollections = "likeReceived";
   static const firebaseUserLikeSentCollections = "likeSent";
+  static const firebaseUserViewReceivedCollections = "viewReceived";
+  static const firebaseUserViewSentCollections = "viewSent";
 
 
 
