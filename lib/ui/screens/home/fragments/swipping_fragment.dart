@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:tinker_clone/ui/screens/home/fragments/user_info_fragment.dart';
 
 import '../../../../controllers/profile_controller.dart';
 import '../../../../global/app_constant.dart';
@@ -79,7 +80,17 @@ class _SwipingFragmentState extends State<SwipingFragment> {
 
                     //user data
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        profileController.viewSentAndViewReceived(
+                          eachProfileInfo.uid.toString(),
+                          senderName,
+                        );
+
+                        //send user to profile person userDetailScreen
+                        Get.to(UserInfoFragment(
+                          userID: eachProfileInfo.uid.toString(),
+                        ));
+                      },
                       child: Column(
                         children: [
                           //name
