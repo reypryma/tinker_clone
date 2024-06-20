@@ -67,8 +67,8 @@ class _UserInfoFragmentState extends State<UserInfoFragment> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
             },
             icon: const Icon(
               Icons.logout,
