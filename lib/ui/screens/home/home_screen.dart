@@ -22,8 +22,8 @@ class _HomeScreenState extends State<HomeScreen>
   [
     const SwipingFragment(),
     const LikeSentLikeReceivedFragment(),
-    const ViewSentViewReceivedFragment(),
     const FavoriteSentFavoriteReceivedFragment(),
+    const ViewSentViewReceivedFragment(),
     UserInfoFragment(userID: currentUserID),
   ];
 
@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen>
           //viewSentViewReceived icon button
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.remove_red_eye,
+                Icons.dvr_outlined,
                 size: 30,
               ),
               label: ""
@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen>
           //likeSentLikeReceived icon button
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.favorite,
+                Icons.remove_red_eye,
                 size: 30,
               ),
               label: ""
