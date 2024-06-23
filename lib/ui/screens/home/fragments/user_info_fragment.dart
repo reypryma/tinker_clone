@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tinker_clone/global/app_constant.dart';
 
@@ -27,6 +28,8 @@ class _UserInfoFragmentState extends State<UserInfoFragment> {
   @override
   void initState() {
     super.initState();
+
+    if(kDebugMode) print("Run User Detail Fragment");
     retrieveUserInfo();
   }
 

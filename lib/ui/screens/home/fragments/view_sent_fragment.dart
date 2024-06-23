@@ -82,7 +82,7 @@ class _ViewSentViewReceivedFragmentState extends State<ViewSentViewReceivedFragm
   @override
   void initState() {
     super.initState();
-
+    if(kDebugMode) print("Run View Sent Fragment");
     getViewsListKeys();
   }
 

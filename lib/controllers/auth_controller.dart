@@ -164,8 +164,8 @@ class AuthController extends GetxController {
         email: emailUser,
         password: passwordUser,
       );
-
       Get.snackbar("Logged-in Successful", "you're logged-in successfully.");
+      currentUserID = FirebaseAuth.instance.currentUser!.uid;
 
       Get.to(const HomeScreen());
     } catch (errorMsg) {
@@ -175,7 +175,7 @@ class AuthController extends GetxController {
 
   checkIfUserIsLoggedIn(User? currentUser) {
     if (currentUser == null) {
-      Get.to(() => const LoginScreen());
+      Get.offAll(() => const LoginScreen());
     } else {
       Get.offAll(() => const HomeScreen());
     }

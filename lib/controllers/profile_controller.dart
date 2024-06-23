@@ -30,11 +30,13 @@ class ProfileController extends GetxController {
     }));
   }
 
+
+
   favoriteSentAndFavoriteReceived(String toUserID, String senderName) async {
     var document = await FirebaseFirestore.instance
-        .collection(AppConstant.firebaseUserCollections)
+        .collection("users")
         .doc(toUserID)
-        .collection(AppConstant.firebaseUserFavoriteReceivedCollections)
+        .collection("favoriteReceived")
         .doc(currentUserID)
         .get();
 
@@ -42,34 +44,34 @@ class ProfileController extends GetxController {
     if (document.exists) {
       //remove currentUserID from the favoriteReceived list of that profile person [toUserID]
       await FirebaseFirestore.instance
-          .collection(AppConstant.firebaseUserCollections)
+          .collection("users")
           .doc(toUserID)
-          .collection(AppConstant.firebaseUserFavoriteReceivedCollections)
+          .collection("favoriteReceived")
           .doc(currentUserID)
           .delete();
 
       //remove profile person [toUserID] from the favoriteSent list of the currentUser
       await FirebaseFirestore.instance
-          .collection(AppConstant.firebaseUserCollections)
+          .collection("users")
           .doc(currentUserID)
-          .collection(AppConstant.firebaseUserFavoriteSentCollections)
+          .collection("favoriteSent")
           .doc(toUserID)
           .delete();
     } else //mark as favorite //add favorite in database
-        {
+    {
       //add currentUserID to the favoriteReceived list of that profile person [toUserID]
       await FirebaseFirestore.instance
-          .collection(AppConstant.firebaseUserCollections)
+          .collection("users")
           .doc(toUserID)
-          .collection(AppConstant.firebaseUserFavoriteReceivedCollections)
+          .collection("favoriteReceived")
           .doc(currentUserID)
           .set({});
 
       //add profile person [toUserID] to the favoriteSent list of the currentUser
       await FirebaseFirestore.instance
-          .collection(AppConstant.firebaseUserCollections)
+          .collection("users")
           .doc(currentUserID)
-          .collection(AppConstant.firebaseUserFavoriteSentCollections)
+          .collection("favoriteSent")
           .doc(toUserID)
           .set({});
 
@@ -81,74 +83,81 @@ class ProfileController extends GetxController {
 
   likeSentAndLikeReceived(String toUserID, String senderName) async {
     var document = await FirebaseFirestore.instance
-        .collection(AppConstant.firebaseUserCollections)
+        .collection("users")
         .doc(toUserID)
-        .collection(AppConstant.firebaseUserLikeReceivedCollections)
+        .collection("likeReceived")
         .doc(currentUserID)
         .get();
 
-    /// Remove the like from database
+    //remove the like from database
     if (document.exists) {
-      /// remove currentUserID from the likeReceived list of that profile person [toUserID]
+      //remove currentUserID from the likeReceived list of that profile person [toUserID]
       await FirebaseFirestore.instance
-          .collection(AppConstant.firebaseUserCollections)
+          .collection("users")
           .doc(toUserID)
-          .collection(AppConstant.firebaseUserLikeReceivedCollections)
+          .collection("likeReceived")
           .doc(currentUserID)
           .delete();
 
-      ///remove profile person [toUserID] from the likeSent list of the currentUser
+      //remove profile person [toUserID] from the likeSent list of the currentUser
       await FirebaseFirestore.instance
-          .collection(AppConstant.firebaseUserCollections)
-          .doc(currentUserID).collection(
-          AppConstant.firebaseUserLikeSentCollections).doc(toUserID)
-          .delete();
-    } else {
-      await FirebaseFirestore.instance
-          .collection(AppConstant.firebaseUserCollections)
+          .collection("users")
+          .doc(currentUserID)
+          .collection("likeSent")
           .doc(toUserID)
-          .collection(AppConstant.firebaseUserLikeReceivedCollections)
+          .delete();
+    } else //add-sent like in database
+    {
+      //add currentUserID to the likeReceived list of that profile person [toUserID]
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(toUserID)
+          .collection("likeReceived")
           .doc(currentUserID)
           .set({});
 
       //add profile person [toUserID] to the likeSent list of the currentUser
       await FirebaseFirestore.instance
-          .collection(AppConstant.firebaseUserCollections)
-          .doc(currentUserID).collection(
-          AppConstant.firebaseUserLikeSentCollections)
+          .collection("users")
+          .doc(currentUserID)
+          .collection("likeSent")
           .doc(toUserID)
           .set({});
 
-      /// TODO send notification
+      //send notification
     }
+
     update();
   }
 
-  viewSentAndViewReceived(String toUserID, String senderName) async
-  {
+  viewSentAndViewReceived(String toUserID, String senderName) async {
     var document = await FirebaseFirestore.instance
         .collection("users")
-        .doc(toUserID).collection("viewReceived").doc(currentUserID)
+        .doc(toUserID)
+        .collection("viewReceived")
+        .doc(currentUserID)
         .get();
 
-    if(document.exists)
-    {
+    if (document.exists) {
       if (kDebugMode) {
         print("already in view list");
       }
-    }
-    else //add new view in database
-        {
+    } else //add new view in database
+    {
       //add currentUserID to the viewReceived list of that profile person [toUserID]
       await FirebaseFirestore.instance
           .collection("users")
-          .doc(toUserID).collection("viewReceived").doc(currentUserID)
+          .doc(toUserID)
+          .collection("viewReceived")
+          .doc(currentUserID)
           .set({});
 
       //add profile person [toUserID] to the viewSent list of the currentUser
       await FirebaseFirestore.instance
           .collection("users")
-          .doc(currentUserID).collection("viewSent").doc(toUserID)
+          .doc(currentUserID)
+          .collection("viewSent")
+          .doc(toUserID)
           .set({});
 
       //send notification

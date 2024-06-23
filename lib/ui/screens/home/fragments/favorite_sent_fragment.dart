@@ -78,6 +78,7 @@ class _FavoriteSentFavoriteReceivedFragmentState
   @override
   void initState() {
     super.initState();
+    if(kDebugMode) print("Run Favorite Fragment");
     getFavoriteListKeys();
   }
 
