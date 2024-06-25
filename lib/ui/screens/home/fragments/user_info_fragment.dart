@@ -3,9 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tinker_clone/global/app_constant.dart';
 
 import '../../../../models/Person.dart';
+import '../../account/account_settings_screen.dart';
 
 class UserInfoFragment extends StatefulWidget {
   final String userID;
@@ -67,17 +69,40 @@ class _UserInfoFragmentState extends State<UserInfoFragment> {
           ),
         ),
         centerTitle: true,
+        leading: widget.userID != currentUserID ? IconButton(
+          onPressed: ()
+          {
+            Get.back();
+          },
+          icon: const Icon(Icons.arrow_back_outlined, size: 30,),
+        ) : Container(),
         automaticallyImplyLeading: false,
         actions: [
-          IconButton(
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-            },
-            icon: const Icon(
-              Icons.logout,
-              size: 30,
-            ),
-          ),
+          widget.userID == currentUserID ?
+          Row(
+            children: [
+              IconButton(
+                onPressed: ()
+                {
+                  Get.to(AccountSettingsScreen());
+                },
+                icon: const Icon(
+                  Icons.settings,
+                  size: 30,
+                ),
+              ),
+              IconButton(
+                onPressed: ()
+                {
+                  FirebaseAuth.instance.signOut();
+                },
+                icon: const Icon(
+                  Icons.logout,
+                  size: 30,
+                ),
+              ),
+            ],
+          ) : Container(),
         ],
       ),
       body: isLoading ? Container() : SingleChildScrollView(
