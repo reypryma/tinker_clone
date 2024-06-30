@@ -19,8 +19,6 @@ class AppConstant {
   static const firebaseUserViewReceivedCollections = "viewReceived";
   static const firebaseUserViewSentCollections = "viewSent";
 
-
-
   // Firebase Url
 
   static const firebaseDefaultAvatarUrl =
