@@ -1,6 +1,11 @@
+import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tinker_clone/global/app_constant.dart';
+import 'package:tinker_clone/services/push_notification_system.dart';
 
+import '../../../services/firebase_access.dart';
 import 'fragments/favorite_sent_fragment.dart';
 import 'fragments/like_sent_fragment.dart';
 import 'fragments/swipping_fragment.dart';
@@ -26,6 +31,26 @@ class _HomeScreenState extends State<HomeScreen>
     const ViewSentViewReceivedFragment(),
     UserInfoFragment(userID: currentUserID),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    init();
+
+    PushNotificationSystem notificationSystem = PushNotificationSystem();
+    notificationSystem.generateDeviceRegisterationToken();
+    notificationSystem.whenNotificationReceived(context);
+  }
+
+  init() async {
+    FirebaseAccessToken firebaseAccessToken = FirebaseAccessToken();
+
+    String token = await firebaseAccessToken.getToken();
+    if (kDebugMode) {
+      print('token is $token');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
