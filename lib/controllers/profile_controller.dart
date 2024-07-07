@@ -161,8 +161,37 @@ class ProfileController extends GetxController {
           .set({});
 
       //send notification
+      sendNotificationToUser(toUserID, "View", senderName);
     }
 
     update();
   }
+
+  sendNotificationToUser(String receiverID, String featureType, String senderName) async
+  {
+    String userDeviceToken = "";
+
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(receiverID)
+        .get()
+        .then((snapshot)
+    {
+      if(snapshot.data()!["userDeviceToken"] != null)
+      {
+        userDeviceToken = snapshot.data()!["userDeviceToken"].toString();
+      }
+    });
+
+    notificationFormat(
+      userDeviceToken,
+      receiverID,
+      featureType,
+      senderName,
+    );
+  }
+
+  void notificationFormat(String userDeviceToken, receiverID, featureType, senderName) {}
+
+
 }
