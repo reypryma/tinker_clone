@@ -1,19 +1,27 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:tinker_clone/global/app_constant.dart';
+import 'package:tinker_clone/services/firebase_access.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/Person.dart';
 
 class ProfileController extends GetxController {
   final Rx<List<Person>> usersProfileList = Rx<List<Person>>([]);
+  Rx<String?> fcmToken = Rx<String?>(null);
+
+  String? get getFcmToken => fcmToken.value;
+
 
   List<Person> get allUsersProfileList => usersProfileList.value;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
 
     usersProfileList.bindStream(FirebaseFirestore.instance
@@ -31,6 +39,12 @@ class ProfileController extends GetxController {
   }
 
 
+  @override
+  void onReady() {
+    super.onReady();
+  }
+
+  
 
   favoriteSentAndFavoriteReceived(String toUserID, String senderName) async {
     var document = await FirebaseFirestore.instance
@@ -76,7 +90,18 @@ class ProfileController extends GetxController {
           .set({});
 
       //send notification
+      sendNotificationToUser(toUserID, "Favorite", senderName);
     }
+
+    update();
+  }
+
+  tokenGenerateProfile() async {
+    await FirebaseAccessToken().getToken().then((value) {
+      fcmToken = Rx<String?>(value);
+    },).onError((error, stackTrace) {
+      print("OnInit: $stackTrace");
+    },);
 
     update();
   }
@@ -125,6 +150,7 @@ class ProfileController extends GetxController {
           .set({});
 
       //send notification
+      sendNotificationToUser(toUserID, "Like", senderName);
     }
 
     update();
@@ -167,18 +193,16 @@ class ProfileController extends GetxController {
     update();
   }
 
-  sendNotificationToUser(String receiverID, String featureType, String senderName) async
-  {
+  sendNotificationToUser(
+      String receiverID, String featureType, String senderName) async {
     String userDeviceToken = "";
 
     await FirebaseFirestore.instance
         .collection("users")
         .doc(receiverID)
         .get()
-        .then((snapshot)
-    {
-      if(snapshot.data()!["userDeviceToken"] != null)
-      {
+        .then((snapshot) {
+      if (snapshot.data()!["userDeviceToken"] != null) {
         userDeviceToken = snapshot.data()!["userDeviceToken"].toString();
       }
     });
@@ -191,7 +215,45 @@ class ProfileController extends GetxController {
     );
   }
 
-  void notificationFormat(String userDeviceToken, receiverID, featureType, senderName) {}
+  void notificationFormat(
+      String userDeviceToken, receiverID, featureType, senderName) {
+    Map<String, String> headerNotification = {
+      "Content-Type": "application/json; UTF-8",
+      "Authorization": "Bearer ${getFcmToken!}"
+    };
+    Map bodyNotification =
+    {
+      "body": "you have received a new $featureType from $senderName. Click to see.",
+      "title": "New $featureType",
+    };
 
 
+    Map dataMap =
+    {
+      "click_action": "FLUTTER_NOTIFICATION_CLICK",
+      "id": "1",
+      "status": "done",
+      "userID": receiverID,
+      "senderID": currentUserID,
+    };
+
+    Map notificationOfficialFormat =
+    {
+      "notification": bodyNotification,
+      "data": dataMap,
+      "priority": "high",
+      "token": userDeviceToken,
+    };
+
+
+    Map messageWrapper = {
+      "message": notificationOfficialFormat
+    };
+
+    http.post(
+      Uri.parse("https://fcm.googleapis.com/v1/projects/fir-learn-2166e/messages:send"),
+      headers: headerNotification,
+      body: jsonEncode(messageWrapper),
+    );
+  }
 }

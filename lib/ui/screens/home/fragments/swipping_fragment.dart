@@ -8,6 +8,8 @@ import 'package:tinker_clone/ui/screens/home/fragments/user_info_fragment.dart';
 
 import '../../../../controllers/profile_controller.dart';
 import '../../../../global/app_constant.dart';
+import '../../../../services/firebase_access.dart';
+import '../../../../services/push_notification_system.dart';
 
 class SwipingFragment extends StatefulWidget {
   const SwipingFragment({super.key});
@@ -31,25 +33,34 @@ class _SwipingFragmentState extends State<SwipingFragment> {
         senderName = dataSnapshot.data()!["name"].toString();
       });
     });
+
+    await profileController.tokenGenerateProfile();
+  }
+
+  init() async {
+    FirebaseAccessToken firebaseAccessToken = FirebaseAccessToken();
+    String token = await firebaseAccessToken.getToken();
+    print('token is $token');
   }
 
   @override
   void initState() {
     super.initState();
-    if(kDebugMode) print("Run Swipe Fragment");
+    if (kDebugMode) print("Run Swipe Fragment");
     readCurrentUserData();
+    init();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Obx(() {
         return NotificationListener<OverscrollIndicatorNotification>(
           onNotification: ((notification) {
             if (notification.leading) {
               return true; // Prevent glow effect at the start of the list
-            } else if (pageController.page == profileController.allUsersProfileList.length - 1) {
+            } else if (pageController.page ==
+                profileController.allUsersProfileList.length - 1) {
               // User is overscrolling at the end of the list
               pageController.animateToPage(
                 0,
@@ -78,7 +89,7 @@ class _SwipingFragmentState extends State<SwipingFragment> {
             itemBuilder: (context, index) {
               final eachProfileInfo =
                   profileController.allUsersProfileList[index];
-          
+
               return DecoratedBox(
                 decoration: BoxDecoration(
                     image: DecorationImage(
@@ -105,9 +116,9 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                           ),
                         ),
                       ),
-          
+
                       const Spacer(),
-          
+
                       //user data
                       GestureDetector(
                         onTap: () {
@@ -115,7 +126,7 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                             eachProfileInfo.uid.toString(),
                             senderName,
                           );
-          
+
                           //send user to profile person userDetailScreen
                           Get.to(UserInfoFragment(
                             userID: eachProfileInfo.uid.toString(),
@@ -133,7 +144,7 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-          
+
                             //age - city
                             Text(
                               "${eachProfileInfo.age} ◉ ${eachProfileInfo.city}",
@@ -143,11 +154,11 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                                 letterSpacing: 4,
                               ),
                             ),
-          
+
                             const SizedBox(
                               height: 4,
                             ),
-          
+
                             //profession and religion
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -157,7 +168,8 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white30,
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16)),
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
                                   ),
                                   child: Text(
                                     eachProfileInfo.profession.toString(),
@@ -175,7 +187,8 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white30,
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16)),
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
                                   ),
                                   child: Text(
                                     eachProfileInfo.religion.toString(),
@@ -187,7 +200,7 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                                 ),
                               ],
                             ),
-          
+
                             //country and ethnicity
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -197,7 +210,8 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white30,
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16)),
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
                                   ),
                                   child: Text(
                                     eachProfileInfo.country.toString(),
@@ -215,7 +229,8 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white30,
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16)),
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
                                   ),
                                   child: Text(
                                     eachProfileInfo.ethnicity.toString(),
@@ -230,11 +245,11 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                           ],
                         ),
                       ),
-          
+
                       const SizedBox(
                         height: 14,
                       ),
-          
+
                       //image buttons - favorite - chat - like
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -252,7 +267,7 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                               width: 60,
                             ),
                           ),
-          
+
                           //chat button
                           GestureDetector(
                             onTap: () {},
@@ -261,7 +276,7 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                               width: 90,
                             ),
                           ),
-          
+
                           //like button
                           GestureDetector(
                             onTap: () {
