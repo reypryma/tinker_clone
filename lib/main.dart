@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tinker_clone/controllers/auth_controller.dart';
 import 'package:get/get.dart';
 import 'package:tinker_clone/ui/screens/auth/login_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'firebase_options.dart';
 void main() async {
@@ -13,6 +14,12 @@ void main() async {
   );
 
   Get.put(AuthController());
+
+  await Permission.notification.isDenied.then((value) {
+    if (value) {
+      Permission.notification.request();
+    }
+  },);
 
   runApp(const MyApp());
 }

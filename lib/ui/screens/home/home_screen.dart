@@ -35,22 +35,15 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-
     init();
+  }
 
+  init() async {
     PushNotificationSystem notificationSystem = PushNotificationSystem();
     notificationSystem.generateDeviceRegisterationToken();
     notificationSystem.whenNotificationReceived(context);
   }
 
-  init() async {
-    FirebaseAccessToken firebaseAccessToken = FirebaseAccessToken();
-
-    String token = await firebaseAccessToken.getToken();
-    if (kDebugMode) {
-      print('token is $token');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
