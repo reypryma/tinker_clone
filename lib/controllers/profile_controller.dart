@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,13 +39,10 @@ class ProfileController extends GetxController {
     }));
   }
 
-
   @override
   void onReady() {
     super.onReady();
   }
-
-  
 
   favoriteSentAndFavoriteReceived(String toUserID, String senderName) async {
     var document = await FirebaseFirestore.instance
@@ -96,9 +94,10 @@ class ProfileController extends GetxController {
     update();
   }
 
-  tokenGenerateProfile() async {
+  Future<void> tokenGenerateProfile() async {
     await FirebaseAccessToken().getToken().then((value) {
       fcmToken = Rx<String?>(value);
+      log("tokenGenerateProfile ${fcmToken.value!}");
     },).onError((error, stackTrace) {
       print("OnInit: $stackTrace");
     },);
@@ -215,10 +214,10 @@ class ProfileController extends GetxController {
     );
   }
 
-  void notificationFormat(
-      String userDeviceToken, receiverID, featureType, senderName) {
+  Future<void> notificationFormat(
+      String userDeviceToken, receiverID, featureType, senderName) async {
     Map<String, String> headerNotification = {
-      "Content-Type": "application/json; UTF-8",
+      "Content-Type": "application/json",
       "Authorization": "Bearer ${getFcmToken!}"
     };
     Map bodyNotification =

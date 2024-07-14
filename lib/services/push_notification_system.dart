@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -194,12 +196,14 @@ class PushNotificationSystem {
     );
   }
 
-  Future generateDeviceRegisterationToken() async {
-    String? deviceToken = await messaging.getToken();
+  Future generateDeviceRegisterationToken(String fcmDeviceToken) async {
+    // String? deviceToken = await messaging.getToken();
+    //
+    // log("\ngenerate device token $deviceToken");
 
     await FirebaseFirestore.instance
         .collection("users")
         .doc(currentUserID)
-        .update({"userDeviceToken": deviceToken});
+        .update({"userDeviceToken": fcmDeviceToken});
   }
 }
