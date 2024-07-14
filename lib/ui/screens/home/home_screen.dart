@@ -35,15 +35,8 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    init();
+    // init();
   }
-
-  init() async {
-    PushNotificationSystem notificationSystem = PushNotificationSystem();
-    notificationSystem.generateDeviceRegisterationToken();
-    notificationSystem.whenNotificationReceived(context);
-  }
-
 
   @override
   Widget build(BuildContext context) {
