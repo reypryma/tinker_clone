@@ -95,7 +95,7 @@ class ProfileController extends GetxController {
   }
 
   Future<void> tokenGenerateProfile() async {
-    await FirebaseAccessToken().getToken().then((value) {
+    await FirebaseAccessToken().getAccessToken().then((value) {
       fcmToken = Rx<String?>(value);
       log("tokenGenerateProfile ${fcmToken.value!}");
     },).onError((error, stackTrace) {
@@ -167,6 +167,7 @@ class ProfileController extends GetxController {
       if (kDebugMode) {
         print("already in view list");
       }
+      sendNotificationToUser(toUserID, "View", senderName);
     } else //add new view in database
     {
       //add currentUserID to the viewReceived list of that profile person [toUserID]
@@ -206,12 +207,18 @@ class ProfileController extends GetxController {
       }
     });
 
-    notificationFormat(
-      userDeviceToken,
-      receiverID,
-      featureType,
-      senderName,
-    );
+    print("UserDeviceToken from DB Is $userDeviceToken");
+
+    try {
+      notificationFormat(
+            userDeviceToken,
+            receiverID,
+            featureType,
+            senderName,
+          );
+    } catch (e) {
+      print("AAAAAAA ${e}");
+    }
   }
 
   Future<void> notificationFormat(
@@ -240,7 +247,7 @@ class ProfileController extends GetxController {
     {
       "notification": bodyNotification,
       "data": dataMap,
-      "priority": "high",
+      // "priority": "high",
       "token": userDeviceToken,
     };
 
@@ -249,10 +256,18 @@ class ProfileController extends GetxController {
       "message": notificationOfficialFormat
     };
 
-    http.post(
+    log("Map ${jsonEncode(messageWrapper)}");
+
+    final http.Response response = await http.post(
       Uri.parse("https://fcm.googleapis.com/v1/projects/fir-learn-2166e/messages:send"),
       headers: headerNotification,
       body: jsonEncode(messageWrapper),
     );
+
+    if(response.statusCode == 200){
+      print("notification sent successfully ${response.body.toString()}");
+    } else {
+      print("Notification Failed, ${response.statusCode} is ${response.body.toString()}");
+    }
   }
 }
