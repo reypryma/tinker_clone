@@ -197,13 +197,13 @@ class PushNotificationSystem {
   }
 
   Future generateDeviceRegisterationToken(String fcmDeviceToken) async {
-    // String? deviceToken = await messaging.getToken();
-    //
-    // log("\ngenerate device token $deviceToken");
+    String? deviceToken = await messaging.getToken();
+
+    log("\ngenerate device token $deviceToken");
 
     await FirebaseFirestore.instance
         .collection("users")
         .doc(currentUserID)
-        .update({"userDeviceToken": fcmDeviceToken});
+        .update({"userDeviceToken": deviceToken});
   }
 }
