@@ -51,24 +51,150 @@ class _SwipingFragmentState extends State<SwipingFragment> {
       Get.snackbar('Error', stackTrace.toString());
     },);
   }
-
-/*  init() async {
-    FirebaseAccessToken firebaseAccessToken = FirebaseAccessToken();
-    String token = await firebaseAccessToken.getToken();
-    print('token is $token');
-  }*/
-
-  // init() async {
-  //
-  // }
-
-
   @override
   void initState() {
     super.initState();
     if (kDebugMode) print("Run Swipe Fragment");
     readCurrentUserData();
     // init();
+  }
+
+  applyFilter()
+  {
+    showDialog(
+        context: context,
+        builder: (BuildContext context)
+        {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState)
+            {
+              return AlertDialog(
+                title: const Text(
+                  "Matching Filter",
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text("I am looking for a:"),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DropdownButton<String>(
+                        hint: const Text('Select gender'),
+                        value: chosenGender,
+                        underline: Container(),
+                        items: [
+                          'Male',
+                          'Female',
+                          'Others'
+                        ].map((value)
+                        {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: const TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? value)
+                        {
+                          setState(() {
+                            chosenGender = value;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 20,),
+
+                    const Text("who lives in:"),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DropdownButton<String>(
+                        hint: const Text('Select country'),
+                        value: chosenCountry,
+                        underline: Container(),
+                        items: [
+                          'Spain',
+                          'France',
+                          'Germany',
+                          'United Kingdom',
+                          'Canada',
+                          'USA',
+                        ].map((value)
+                        {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: const TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? value)
+                        {
+                          setState(() {
+                            chosenCountry = value;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 20,),
+
+                    const Text("who's age is equal to or above:"),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DropdownButton<String>(
+                        hint: const Text('Select age'),
+                        value: chosenAge,
+                        underline: Container(),
+                        items: [
+                          '18',
+                          '20',
+                          '25',
+                          '30',
+                          '35',
+                          '40',
+                          '45',
+                          '50',
+                          '55',
+                        ].map((value)
+                        {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: const TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? value)
+                        {
+                          setState(() {
+                            chosenAge = value;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 20,),
+
+                  ],
+                ),
+                actions: [
+                  ElevatedButton(
+                    onPressed: ()
+                    {
+                      Get.back();
+
+                      profileController.getResults();
+                    },
+                    child: const Text("Done"),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+    );
   }
 
   @override
