@@ -21,22 +21,68 @@ class ProfileController extends GetxController {
 
   List<Person> get allUsersProfileList => usersProfileList.value;
 
+  getResults()
+  {
+    onInit();
+  }
+
   @override
   void onInit() async {
     super.onInit();
 
-    usersProfileList.bindStream(FirebaseFirestore.instance
-        .collection(AppConstant.firebaseUserCollections)
-        .where("uid", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .snapshots()
-        .map((QuerySnapshot queryDataSnapshot) {
-      List<Person> profilesList = [];
+    // usersProfileList.bindStream(FirebaseFirestore.instance
+    //     .collection(AppConstant.firebaseUserCollections)
+    //     .where("uid", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+    //     .snapshots()
+    //     .map((QuerySnapshot queryDataSnapshot) {
+    //   List<Person> profilesList = [];
+    //
+    //   for (var eachProfile in queryDataSnapshot.docs) {
+    //     profilesList.add(Person.fromDataSnapshot(eachProfile));
+    //   }
+    //   return profilesList;
+    // }));
 
-      for (var eachProfile in queryDataSnapshot.docs) {
-        profilesList.add(Person.fromDataSnapshot(eachProfile));
-      }
-      return profilesList;
-    }));
+
+    if(chosenGender == null || chosenCountry == null || chosenAge == null)
+    {
+      usersProfileList.bindStream(
+          FirebaseFirestore.instance
+              .collection("users")
+              .where("uid", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+              .snapshots()
+              .map((QuerySnapshot queryDataSnapshot)
+          {
+            List<Person> profilesList = [];
+
+            for(var eachProfile in queryDataSnapshot.docs)
+            {
+              profilesList.add(Person.fromDataSnapshot(eachProfile));
+            }
+            return profilesList;
+          })
+      );
+    }  else
+    {
+      usersProfileList.bindStream(
+          FirebaseFirestore.instance
+              .collection("users")
+              .where("gender", isEqualTo: chosenGender.toString().toLowerCase())
+              .where("country", isEqualTo: chosenCountry.toString())
+              .where("age", isGreaterThanOrEqualTo: int.parse(chosenAge.toString()))
+              .snapshots()
+              .map((QuerySnapshot queryDataSnapshot)
+          {
+            List<Person> profilesList = [];
+
+            for(var eachProfile in queryDataSnapshot.docs)
+            {
+              profilesList.add(Person.fromDataSnapshot(eachProfile));
+            }
+            return profilesList;
+          })
+      );
+    }
   }
 
   @override

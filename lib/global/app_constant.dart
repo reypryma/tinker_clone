@@ -26,3 +26,6 @@ class AppConstant {
 }
 
 String currentUserID = FirebaseAuth.instance.currentUser!.uid;
+String? chosenAge;
+String? chosenCountry;
+String? chosenGender;
