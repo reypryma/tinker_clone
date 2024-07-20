@@ -40,6 +40,7 @@ class Person
   String? languageSpoken;
   String? religion;
   String? ethnicity;
+  String? gender;
 
   Person({
     //personal info
@@ -48,6 +49,7 @@ class Person
     this.email,
     this.password,
     this.name,
+    this.gender,
     this.age,
     this.phoneNo,
     this.city,
@@ -90,6 +92,7 @@ class Person
       //personal info
       uid: dataSnapshot["uid"],
       name: dataSnapshot["name"],
+      gender: dataSnapshot["gender"],
       imageProfile: dataSnapshot["imageProfile"],
       email: dataSnapshot["email"],
       password: dataSnapshot["password"],
@@ -137,6 +140,7 @@ class Person
         "password": password,
         "name": name,
         "age": age,
+        "gender": gender,
         "phoneNo": phoneNo,
         "city": city,
         "country": country,
