@@ -27,6 +27,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
 
   //personal info
   TextEditingController nameTextEditingController = TextEditingController();
+  TextEditingController genderTextEditingController = TextEditingController();
   TextEditingController ageTextEditingController = TextEditingController();
   TextEditingController phoneNoTextEditingController = TextEditingController();
   TextEditingController cityTextEditingController = TextEditingController();
@@ -76,6 +77,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   //personal info
   String name = '';
   String age = '';
+  String gender = '';
   String phoneNo = '';
   String city = '';
   String country = '';
@@ -153,6 +155,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           nameTextEditingController.text = name;
           age = snapshot.data()!['age'].toString();
           ageTextEditingController.text = age;
+          gender = snapshot.data()!['gender'].toString();
+          genderTextEditingController.text = gender;
           phoneNo = snapshot.data()!['phoneNo'];
           phoneNoTextEditingController.text = phoneNo;
           city = snapshot.data()!['city'];
@@ -217,6 +221,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   updateUserDataToFirestoreDatabase(
     //personal info
     String name,
+    String gender,
     String age,
     String phoneNo,
     String city,
@@ -278,6 +283,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         .update({
       //personal info
       'name': name,
+      'gender': gender.toLowerCase(),
       'age': int.parse(age),
       'phoneNo': phoneNo,
       'city': city,
@@ -417,6 +423,21 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                         editingController: ageTextEditingController,
                         labelText: "Age",
                         iconData: Icons.numbers,
+                        isObscure: false,
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 24,
+                    ),
+
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 36,
+                      height: 55,
+                      child: CustomTextFieldWidget(
+                        editingController: genderTextEditingController,
+                        labelText: "Gender",
+                        iconData: Icons.male,
                         isObscure: false,
                       ),
                     ),
@@ -875,6 +896,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                                   ageTextEditingController.text
                                       .trim()
                                       .isNotEmpty &&
+                                  ageTextEditingController.text
+                                      .trim()
+                                      .isNotEmpty &&
                                   phoneNoTextEditingController.text
                                       .trim()
                                       .isNotEmpty &&
@@ -958,6 +982,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                                 ? await updateUserDataToFirestoreDatabase(
                                     //personal info
                                     nameTextEditingController.text.trim(),
+                                    genderTextEditingController.text.trim(),
                                     ageTextEditingController.text.trim(),
                                     phoneNoTextEditingController.text.trim(),
                                     cityTextEditingController.text.trim(),
