@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:tinker_clone/ui/screens/home/fragments/user_info_fragment.dart';
 import 'package:tinker_clone/ui/widgets/loading_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../controllers/profile_controller.dart';
 import '../../../../global/app_constant.dart';
@@ -24,6 +27,47 @@ class _SwipingFragmentState extends State<SwipingFragment> {
   String senderName = "";
   final pageController = PageController(initialPage: 0, viewportFraction: 1);
   bool loading = true;
+
+  startChattingInWhatsApp(String receiverPhoneNumber) async
+  {
+    var androidUrl = "whatsapp://send?phone=$receiverPhoneNumber&text=Hi, I found your profile on dating app.";
+    var iosUrl = "https://wa.me/$receiverPhoneNumber?text=${Uri.parse('Hi, I found your profile on dating app.')}";
+
+    try
+    {
+      if(Platform.isIOS)
+      {
+        await launchUrl((Uri.parse(iosUrl)));
+      }
+      else
+      {
+        await launchUrl((Uri.parse(androidUrl)));
+      }
+    }
+    on Exception
+    {
+      showDialog(
+          context: context,
+          builder: (BuildContext context)
+          {
+            return AlertDialog(
+              title: const Text("Whatsapp Not Found"),
+              content: const Text("WhatsApp is not installed."),
+              actions: [
+                TextButton(
+                  onPressed: ()
+                  {
+                    Get.back();
+                  },
+                  child: const Text("Ok"),
+                ),
+              ],
+            );
+          }
+      );
+    }
+  }
+
 
   void readCurrentUserData() async {
     await FirebaseFirestore.instance
@@ -176,7 +220,6 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                       ),
                     ),
                     const SizedBox(height: 20,),
-
                   ],
                 ),
                 actions: [
@@ -184,7 +227,6 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                     onPressed: ()
                     {
                       Get.back();
-
                       profileController.getResults();
                     },
                     child: const Text("Done"),
@@ -254,7 +296,9 @@ class _SwipingFragmentState extends State<SwipingFragment> {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            applyFilter();
+                          },
                           icon: const Icon(
                             Icons.filter_list,
                             size: 30,
@@ -416,7 +460,9 @@ class _SwipingFragmentState extends State<SwipingFragment> {
 
                         //chat button
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            startChattingInWhatsApp(eachProfileInfo.phoneNo.toString());
+                          },
                           child: Image.asset(
                             AppConstant.chatImage,
                             width: 90,
