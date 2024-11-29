@@ -1,4 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as crs;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -25,7 +25,7 @@ class _UserInfoFragmentState extends State<UserInfoFragment> {
 
   List<String> sliderImages = [];
   int _current = 0;
-  final CarouselController _controller = CarouselController();
+  final crs.CarouselController _controller = crs.CarouselController();
 
   @override
   void initState() {
@@ -116,7 +116,7 @@ class _UserInfoFragmentState extends State<UserInfoFragment> {
                 width: MediaQuery.of(context).size.width,
                 child: Padding(
                   padding: const EdgeInsets.all(2),
-                  child: CarouselSlider(
+                  child: crs.CarouselSlider(
                     items: sliderImages
                         .map(
                           (e) => Image.network(
@@ -126,7 +126,7 @@ class _UserInfoFragmentState extends State<UserInfoFragment> {
                         )
                         .toList(),
                     carouselController: _controller,
-                    options: CarouselOptions(
+                    options: crs.CarouselOptions(
                       aspectRatio: 16 / 9,
                       viewportFraction: 0.8,
                       initialPage: 0,
